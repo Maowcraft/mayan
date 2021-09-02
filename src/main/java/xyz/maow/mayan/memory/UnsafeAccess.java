@@ -8,14 +8,9 @@ import java.lang.reflect.Field;
 @SuppressWarnings("sunapi")
 final class UnsafeAccess {
     private static final Lazy<Unsafe> unsafe = Lazy.of(() -> {
-        try {
-            final Field f = Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            return (Unsafe) f.get(null);
-        } catch (ReflectiveOperationException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        final Field f = Unsafe.class.getDeclaredField("theUnsafe");
+        f.setAccessible(true);
+        return (Unsafe) f.get(null);
     });
 
     private UnsafeAccess() {
@@ -23,6 +18,6 @@ final class UnsafeAccess {
     }
 
     static Unsafe unsafe() {
-        return unsafe.evaluate();
+        return unsafe.get();
     }
 }

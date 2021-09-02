@@ -1,13 +1,15 @@
 package xyz.maow.mayan.memory;
 
 import xyz.maow.mayan.annotation.Unsafe;
+import xyz.maow.mayan.collect.IndexedIterable;
 
 import java.io.Closeable;
+import java.util.Collection;
 
 import static xyz.maow.mayan.memory.UnsafeAccess.unsafe;
 
 @Unsafe
-public interface Memory<T> extends Closeable {
+public interface Memory<T> extends Closeable, Collection<T>, IndexedIterable<T> {
     void set(long index, T value);
 
     T get(long index);
@@ -19,6 +21,9 @@ public interface Memory<T> extends Closeable {
     int size();
 
     long offset();
+
+    @Override
+    void close();
 
     // =========
     // Static Factory Methods
