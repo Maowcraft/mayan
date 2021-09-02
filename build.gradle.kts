@@ -13,3 +13,9 @@ repositories {
 dependencies {
 
 }
+
+tasks {
+    compileJava {
+        options.compilerArgs.add("-XDenableSunApiLintControl")
+    }
+}
