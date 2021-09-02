@@ -1,10 +1,7 @@
 package xyz.maow.mayan.memory;
 
-import xyz.maow.mayan.annotation.Unsafe;
-
-@Unsafe
-public class BooleanMemory extends AbstractMemory<Boolean> {
-    public BooleanMemory(int size) {
+final class BoolMemory extends AbstractMemory<Boolean> {
+    BoolMemory(int size) {
         super(size, Byte.BYTES);
     }
 
