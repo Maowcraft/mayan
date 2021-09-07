@@ -1,3 +1,6 @@
 # Mayan
-A set of high-performance extensions to the Java standard library to reduce boilerplate and unsafe operations.
-In English: A Java standard library expansion.
+Extensions to the Java standard library to fill the gaps where unsafe or slow code lies. 
+
+## Planned
+- Memory (Unsafe)
+- Reflection (LambdaMetafactory/Unsafe)
