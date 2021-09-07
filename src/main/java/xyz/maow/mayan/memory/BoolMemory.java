@@ -1,5 +1,7 @@
 package xyz.maow.mayan.memory;
 
+import static xyz.maow.mayan.memory.UnsafeAccess.unsafe;
+
 final class BoolMemory extends AbstractMemory<Boolean> {
     BoolMemory(int size) {
         super(size, Byte.BYTES);

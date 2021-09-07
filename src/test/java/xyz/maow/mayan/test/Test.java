@@ -8,12 +8,5 @@ public class Test {
             memory.set(0, 69);
             System.out.println(memory.get(0));
         }
-
-//        final Either<String, Exception> either = Either.right(new Exception());
-//        either
-//                .onLeft(System.out::println)
-//                .onRight(ex -> {
-//                    throw ex;
-//                });
     }
 }
