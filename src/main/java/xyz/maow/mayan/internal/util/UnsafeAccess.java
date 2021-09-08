@@ -1,12 +1,12 @@
-package xyz.maow.mayan.memory;
+package xyz.maow.mayan.internal.util;
 
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 
 @SuppressWarnings("sunapi")
-final class UnsafeAccess {
-    static final Unsafe unsafe;
+public final class UnsafeAccess {
+    public static final Unsafe unsafe;
 
     private UnsafeAccess() {
         throw new UnsupportedOperationException();

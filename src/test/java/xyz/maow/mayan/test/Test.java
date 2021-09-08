@@ -1,12 +1,12 @@
 package xyz.maow.mayan.test;
 
-import xyz.maow.mayan.memory.Memory;
+import xyz.maow.mayan.memory.Segment;
+import xyz.maow.mayan.memory.scope.Scope;
 
 public class Test {
     public static void main(String[] args) {
-        try (Memory<Integer> memory = Memory.ofInt(1)) {
-            memory.set(0, 69);
-            System.out.println(memory.get(0));
+        try (Scope scope = Scope.confined()) {
+            final Segment<Integer> seg = scope.ofInt(4);
         }
     }
 }

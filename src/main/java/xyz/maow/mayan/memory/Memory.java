@@ -1,58 +1,92 @@
 package xyz.maow.mayan.memory;
 
-import java.io.Closeable;
+import xyz.maow.mayan.memory.scope.Scope;
 
-import static xyz.maow.mayan.memory.UnsafeAccess.unsafe;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-public interface Memory<T> extends Closeable {
-    void set(long index, T value);
+import static xyz.maow.mayan.internal.util.UnsafeAccess.unsafe;
 
-    T get(long index);
+public final class Memory {
+    private final Scope scope;
 
-    void reallocate(int size);
-
-    long address();
-
-    int size();
-
-    long offset();
-
-    @Override
-    void close();
-
-    // =========
-    // Static Factory Methods
-    // =========
-
-    static Memory<Boolean> ofBoolean(int size) {
-        return new BoolMemory(size);
+    public Memory(Scope scope) {
+        this.scope = scope;
     }
 
-    static Memory<Byte> ofByte(int size) {
-        return MemFactory.from(unsafe::getByte, unsafe::putByte, size, Byte.BYTES);
+    public Memory() {
+        this(null);
     }
 
-    static Memory<Character> ofChar(int size) {
-        return MemFactory.from(unsafe::getChar, unsafe::putChar, size, Character.BYTES);
+    public Segment<Boolean> ofBool(long size) {
+        return new BoolSegmentImpl(scope, size);
     }
 
-    static Memory<Short> ofShort(int size) {
-        return MemFactory.from(unsafe::getShort, unsafe::putShort, size, Short.BYTES);
+    public Segment<Byte> ofByte(long size) {
+        return of(size, Byte.BYTES, unsafe::putByte, unsafe::getByte);
     }
 
-    static Memory<Integer> ofInt(int size) {
-        return MemFactory.from(unsafe::getInt, unsafe::putInt, size, Integer.BYTES);
+    public Segment<Character> ofChar(long size) {
+        return of(size, Character.BYTES, unsafe::putChar, unsafe::getChar);
     }
 
-    static Memory<Long> ofLong(int size) {
-        return MemFactory.from(unsafe::getLong, unsafe::putLong, size, Long.BYTES);
+    public Segment<Short> ofShort(long size) {
+        return of(size, Short.BYTES, unsafe::putShort, unsafe::getShort);
     }
 
-    static Memory<Float> ofFloat(int size) {
-        return MemFactory.from(unsafe::getFloat, unsafe::putFloat, size, Float.BYTES);
+    public Segment<Integer> ofInt(long size) {
+        return of(size, Integer.BYTES, unsafe::putInt, unsafe::getInt);
     }
 
-    static Memory<Double> ofDouble(int size) {
-        return MemFactory.from(unsafe::getDouble, unsafe::putDouble, size, Double.BYTES);
+    public Segment<Long> ofLong(long size) {
+        return of(size, Long.BYTES, unsafe::putLong, unsafe::getLong);
+    }
+
+    public Segment<Float> ofFloat(long size) {
+        return of(size, Float.BYTES, unsafe::putFloat, unsafe::getFloat);
+    }
+
+    public Segment<Double> ofDouble(long size) {
+        return of(size, Double.BYTES, unsafe::putDouble, unsafe::getDouble);
+    }
+
+    public Segment<Boolean> fromBool(long address, long size) {
+        return new BoolSegmentImpl(scope, address, size);
+    }
+
+    public Segment<Byte> fromByte(long address, long size) {
+        return from(address, size, Byte.BYTES, unsafe::putByte, unsafe::getByte);
+    }
+
+    public Segment<Character> fromChar(long address, long size) {
+        return from(address, size, Character.BYTES, unsafe::putChar, unsafe::getChar);
+    }
+
+    public Segment<Short> fromShort(long address, long size) {
+        return from(address, size, Short.BYTES, unsafe::putShort, unsafe::getShort);
+    }
+
+    public Segment<Integer> fromInt(long address, long size) {
+        return from(address, size, Integer.BYTES, unsafe::putInt, unsafe::getInt);
+    }
+
+    public Segment<Long> fromLong(long address, long size) {
+        return from(address, size, Long.BYTES, unsafe::putLong, unsafe::getLong);
+    }
+
+    public Segment<Float> fromFloat(long address, long size) {
+        return from(address, size, Float.BYTES, unsafe::putFloat, unsafe::getFloat);
+    }
+
+    public Segment<Double> fromDouble(long address, long size) {
+        return from(address, size, Double.BYTES, unsafe::putDouble, unsafe::getDouble);
+    }
+
+    private <T> Segment<T> of(long size, long offset, BiConsumer<Long, T> setter, Function<Long, T> getter) {
+        return new SegmentImpl<>(null, size, offset, setter, getter);
+    }
+
+    private <T> Segment<T> from(long address, long size, long offset, BiConsumer<Long, T> setter, Function<Long, T> getter) {
+        return new SegmentImpl<>(scope, address, size, offset, setter, getter);
     }
 }
